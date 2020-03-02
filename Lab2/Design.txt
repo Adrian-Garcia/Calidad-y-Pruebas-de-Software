@@ -1,0 +1,55 @@
+keep same clases
+
+Counter
+	private:
+
+		char type;
+		unsigned long long int codeLines; 			// T
+		unsigned long long int itemLines;				// I
+		unsigned long long int baseLines;				// B
+		unsigned long long int deletedLines; 		// D
+		unsigned long long int modifiedLines;		// M
+		unsigned long long int addedLines; 			// A
+
+	public:
+		Counter()
+		geters() && setters() of previous variables
+
+InputFile
+
+	private:
+		vector<counter> lineCounter;
+
+		removeSpaces()
+		fileEmpty()
+		lineAfterD()
+
+	public:
+		InputFile()
+
+		scanFile()	{
+
+			while (file is not finished)
+
+				getLine()
+
+				if line is in comment 
+					continue
+
+				if line is blank
+					continue
+
+				else 
+					if .i
+						itemLines++
+					else if .d
+						itemLines += lineAfterD()
+					else if .b
+						baseLines += lineAfterB()
+					else if .m
+						modifiedLines++
+
+			Whuen file is over
+
+			if itemLines>0 && d
+		}
