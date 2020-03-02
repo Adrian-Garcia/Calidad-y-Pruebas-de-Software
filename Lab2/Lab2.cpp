@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -29,24 +30,57 @@ public:
 		this->codeLines++;
 	}
 
-	void addOneCommentLine() {
+	void addOneItemLine() {
 		this->commentLines++;
 	}
 
-	void addOneBlankLine() {
-		this->blankLines++;
+	void setBaseLines(unsigned long long int baseLines) {
+		this->baseLines = baseLines;
+	}
+
+	void setDeletedLines(unsigned long long int deletedLines) {
+		this->deletedLines = deletedLines;
+	}
+
+	void setModifiedLines(unsigned long long int modifiedLines) {
+		this->modifiedLines = modifiedLines;
+	}
+
+	void setAddedLines(unsigned long long int addedLines) {
+		this->addedLines = addedLines;
 	}
 
 	unsigned long long int getCodeLines() {
 		return codeLines;
 	}
 
-	unsigned long long int getCommentLines() {
-		return commentLines;
+	unsigned long long int itemLines() {
+		return itemLines;
 	}
 
-	unsigned long long int getBlankLines() {
-		return blankLines;
+	unsigned long long int getBaseLines() {
+		return baseLines;
+	}
+
+	unsigned long long int getDeletedLines() {
+		return deletedLines;
+	}
+
+	unsigned long long int getModifiedLines() {
+		return modifiedLines;
+	}
+
+	unsigned long long int getAddedLines() {
+		return addedLines;
+	}
+
+	clear() {
+		this->codeLines = 0;
+		this->itemLines = 0;
+		this->baseLines = 0;
+		this->deletedLines = 0;
+		this->modifiedLines = 0;
+		this->addedLines = 0;
 	}
 };
 
@@ -54,7 +88,7 @@ class InputFile {
 
 private:
 
-	Counter lineCounter;
+	vector<Counter> lineCounters;
 
 	// Elimina los espacios de un string
 	string removeSpaces(string str) { 
@@ -81,73 +115,80 @@ public:
 	// Funcion principal que lee el archivo y cuenta lineas
 	void scanFile() {
 
+		// .M
+		Counter currentLine;
 		bool inComment = false;
 		string sLineContent;
 		string sFileName;
 
 		// Pedimos nombre del archivo
-		cin >> sFileName;
-		fFile.open(sFileName.c_str());
+		// .M
+		getline(cin, fFileName);	
 
-		// Si el archivo no existe o esta vacio, la funcion termina
-		if (fFile.fail() || fileEmpty(fFile))
-			return;
+		while (fFileName != "") { 
 
-		// Recorremos el archivo
-		while (!fFile.eof()) {
+			fFile.open(sFileName.c_str());
 
-			getline(fFile, sLineContent);
-			sLineContent = removeSpaces(sLineContent);
+			// Si el archivo no existe o esta vacio, la funcion termina
+			if (fFile.fail() || fileEmpty(fFile))
+				return;
 
-			// Si estamos en comentarios
-			if (inComment) {
+			// Recorremos el archivo
+			while (!fFile.eof()) {
 
-				if (sLineContent.find("*/") != -1) {
-					inComment = false;
-					lineCounter.addOneCommentLine();				
-					continue;
-				}
+				getline(fFile, sLineContent);
+				sLineContent = removeSpaces(sLineContent);
 
-				lineCounter.addOneCommentLine();
-			}
+				// Si estamos en comentarios
+				if (inComment) {
 
-			// Si no estamos en comentarios
-			else if (!inComment) {
+					if (sLineContent.find("*/") != -1) {
+						inComment = false;
+						lineCounter.addOneCommentLine();				
+						continue;
+					}
 
-				// Busca commentarios de una linea
-				if (sLineContent.find("//") != -1) {
 					lineCounter.addOneCommentLine();
 				}
 
-				// Busca bloques de comentarios
-				else if (sLineContent.find("/*") != -1) {
-					lineCounter.addOneCommentLine();
-					inComment = true;
-				}
+				// Si no estamos en comentarios
+				else if (!inComment) {
 
-				// Verify if there is a character on the string
-				else if (sLineContent.size() > 0) {
-					lineCounter.addOneCodeLine();
-				} 
+					// Busca commentarios de una linea
+					if (sLineContent.find("//") != -1) {
+						lineCounter.addOneCommentLine();
+					}
 
-				// Add blank space
-				else {
-					lineCounter.addOneBlankLine();
+					// Busca bloques de comentarios
+					else if (sLineContent.find("/*") != -1) {
+						lineCounter.addOneCommentLine();
+						inComment = true;
+					}
+
+					// Verify if there is a character on the string
+					else if (sLineContent.size() > 0) {
+						lineCounter.addOneCodeLine();
+					} 
+
+					// Add blank space
+					else {
+						lineCounter.addOneBlankLine();
+					}
 				}
 			}
+
+			// Imprimimos resultados
+			cout << "Nombre del archivo: " << sFileName << endl;
+			cout << "--------------------------------------------" << endl;
+			cout << "Cantidad de líneas en blanco: " << lineCounter.getBlankLines() << endl;
+			cout << "Cantidad de líneas con comentarios: " << lineCounter.getCommentLines() << endl;
+			cout << "Cantidad de líneas con código: " << lineCounter.getCodeLines() << endl;
+			cout << "--------------------------------------------" << endl;
+			cout << "Cantidad total de líneas: " << lineCounter.getBlankLines() + lineCounter.getCommentLines() + lineCounter.getCodeLines() << endl;
+
+			// Cerramos programa
+			fFile.close();
 		}
-
-		// Imprimimos resultados
-		cout << "Nombre del archivo: " << sFileName << endl;
-		cout << "--------------------------------------------" << endl;
-		cout << "Cantidad de líneas en blanco: " << lineCounter.getBlankLines() << endl;
-		cout << "Cantidad de líneas con comentarios: " << lineCounter.getCommentLines() << endl;
-		cout << "Cantidad de líneas con código: " << lineCounter.getCodeLines() << endl;
-		cout << "--------------------------------------------" << endl;
-		cout << "Cantidad total de líneas: " << lineCounter.getBlankLines() + lineCounter.getCommentLines() + lineCounter.getCodeLines() << endl;
-
-		// Cerramos programa
-		fFile.close();
 	}
 };
 
