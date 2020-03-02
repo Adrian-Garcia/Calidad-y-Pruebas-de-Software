@@ -57,7 +57,7 @@ InputFile
 						else if .m
 							modifiedLines++
 
-				Whuen file is over
+				When file is over
 
 				if deletedLines==0 && modifiedLines==0 && baseLines==0
 					type = 'N' 	// Type new
