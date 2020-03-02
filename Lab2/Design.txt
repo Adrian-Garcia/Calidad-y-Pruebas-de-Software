@@ -14,42 +14,71 @@ Counter
 	public:
 		Counter()
 		geters() && setters() of previous variables
+		clear()
 
 InputFile
 
 	private:
-		vector<counter> lineCounter;
+		vector<Counter> lineCounters;
 
 		removeSpaces()
 		fileEmpty()
 		lineAfterD()
+		printLineCounters()
 
 	public:
 		InputFile()
 
 		scanFile()	{
 
-			while (file is not finished)
+			Counter currentLine
+			
+			while(user give files)
+				
+				user put fileName
+				
+				while (file is not finished)
 
-				getLine()
+					getLine()
 
-				if line is in comment 
-					continue
+					if line is in comment 
+						continue
 
-				if line is blank
-					continue
+					if line is blank
+						continue
+
+					else 
+						if .i
+							itemLines++
+						else if .d
+							itemLines += lineAfterD()
+						else if .b
+							baseLines += lineAfterB()
+						else if .m
+							modifiedLines++
+
+				Whuen file is over
+
+				if deletedLines==0 && modifiedLines==0 && baseLines==0
+					type = 'N' 	// Type new
+
+				else if (baseLines>0 && (deletedLines>0 || modifiedLines>0))
+					type = 'B'	// Type Base
 
 				else 
-					if .i
-						itemLines++
-					else if .d
-						itemLines += lineAfterD()
-					else if .b
-						baseLines += lineAfterB()
-					else if .m
-						modifiedLines++
+					type = 'R'	// Type reused
 
-			Whuen file is over
+				LineCounters.push_back(currentLine);
+				currentLine.clear();
+				closeFile();
 
-			if itemLines>0 && d
+			printLineCounters()
 		}
+
+int main() {
+
+	InputFile input;
+	input.scanFile();
+
+	return 0;
+}
