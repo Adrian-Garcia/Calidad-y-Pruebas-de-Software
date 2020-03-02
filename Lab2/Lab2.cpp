@@ -8,6 +8,8 @@ using namespace std;
 class Counter {
 
 private:
+	char type;
+	string name;
 	unsigned long long int codeLines; 			// T
 	unsigned long long int itemLines;				// I
 	unsigned long long int baseLines;				// B
@@ -18,12 +20,22 @@ private:
 public:
 
 	Counter() {
+		type = '0';
+		name = "";
 		codeLines = 0;
 		itemLines = 0;
 		baseLines = 0;
 		deletedLines = 0;
 		modifiedLines = 0;
 		addedLines = 0;
+	}
+
+	void setType(char type) {
+		this->type = type;
+	}
+
+	void setName(string name) {
+		this->name = name;
 	}
 
 	void addOneCodeLine() {
@@ -50,11 +62,19 @@ public:
 		this->addedLines = addedLines;
 	}
 
+	char getType() {
+		return type;
+	}
+
+	string getName() {
+		return name;
+	}
+
 	unsigned long long int getCodeLines() {
 		return codeLines;
 	}
 
-	unsigned long long int itemLines() {
+	unsigned long long int getItemLines() {
 		return itemLines;
 	}
 
@@ -74,7 +94,9 @@ public:
 		return addedLines;
 	}
 
-	clear() {
+	void clear() {
+		this->type = '';
+		this->name = "";
 		this->codeLines = 0;
 		this->itemLines = 0;
 		this->baseLines = 0;
@@ -116,7 +138,7 @@ public:
 	void scanFile() {
 
 		// .M
-		Counter currentLine;
+		Counter currentFile;
 		bool inComment = false;
 		string sLineContent;
 		string sFileName;
@@ -130,8 +152,14 @@ public:
 			fFile.open(sFileName.c_str());
 
 			// Si el archivo no existe o esta vacio, la funcion termina
-			if (fFile.fail() || fileEmpty(fFile))
-				return;
+			if (fFile.fail() || fileEmpty(fFile)) {
+				
+				getline(cin, fFileName);	
+				// .M
+				continue;
+			}
+
+			currentFile.setName(fFileName)
 
 			// Recorremos el archivo
 			while (!fFile.eof()) {
@@ -144,30 +172,41 @@ public:
 
 					if (sLineContent.find("*/") != -1) {
 						inComment = false;
-						lineCounter.addOneCommentLine();				
+						currentFile.addOneCommentLine();				
 						continue;
 					}
 
-					lineCounter.addOneCommentLine();
+					currentFile.addOneCommentLine();
 				}
 
 				// Si no estamos en comentarios
 				else if (!inComment) {
 
+					// Busca items
+					if (sLineContent.find("//.i")) {
+						currentFile.addOneItemLine();
+					}
+
+					// Busca lineas borradas 
+					if (sLineContent.find("//.d=")) {
+						
+						currentFile.
+					}
+
 					// Busca commentarios de una linea
-					if (sLineContent.find("//") != -1) {
-						lineCounter.addOneCommentLine();
+					else if (sLineContent.find("//") != -1) {
+						currentFile.addOneCommentLine();
 					}
 
 					// Busca bloques de comentarios
 					else if (sLineContent.find("/*") != -1) {
-						lineCounter.addOneCommentLine();
+						currentFile.addOneCommentLine();
 						inComment = true;
 					}
 
 					// Verify if there is a character on the string
 					else if (sLineContent.size() > 0) {
-						lineCounter.addOneCodeLine();
+						currentFile.addOneCodeLine();
 					} 
 
 					// Add blank space
@@ -177,19 +216,35 @@ public:
 				}
 			}
 
-			// Imprimimos resultados
-			cout << "Nombre del archivo: " << sFileName << endl;
-			cout << "--------------------------------------------" << endl;
-			cout << "Cantidad de líneas en blanco: " << lineCounter.getBlankLines() << endl;
-			cout << "Cantidad de líneas con comentarios: " << lineCounter.getCommentLines() << endl;
-			cout << "Cantidad de líneas con código: " << lineCounter.getCodeLines() << endl;
-			cout << "--------------------------------------------" << endl;
-			cout << "Cantidad total de líneas: " << lineCounter.getBlankLines() + lineCounter.getCommentLines() + lineCounter.getCodeLines() << endl;
+			// .d = 7
 
 			// Cerramos programa
 			fFile.close();
 		}
-	}
+
+		// Imprimimos resultados
+		cout << "PARTES BASE:" << endl;
+		for (int i=0; i<lineCounters.size(); i++) {
+			
+			if (lineCounters[i].getType() == 'B') {
+				cout << lineCounters[i].getName();
+				cout << ": T=" << lineCounters[i].getCodeLines(); 
+				cout << ", I=" << lineCounters[i].getItemLines(); 
+				cout << ", B=" << lineCounters[i].getBaseLines();
+				cout << ", D=" << lineCounters[i].getDeletedLines();
+				cout << ", M=" << lineCounters[i].getModifiedLines(); 
+				cout << ", A=" << lineCounters[i].getAddedLines() << endl;
+			} 
+		} 	cout << "--------------------------------------------" << endl;
+		
+		cout << "PARTES NUEVAS:" << endl;
+		for (int i=0; i<lineCounters.size(); i++) {
+
+			if (lineCounters[i].getType == 'N') {
+
+			}
+		}
+	}	
 };
 
 int main() {
