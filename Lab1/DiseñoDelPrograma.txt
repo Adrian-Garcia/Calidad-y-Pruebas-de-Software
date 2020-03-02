@@ -1,0 +1,50 @@
+Diseño del programa
+	
+	Counter
+		Private
+			int codeLines
+			int commentLines
+			int blankLines
+
+		public
+
+			// Getters
+			getCodeLines()
+			getCommentLines()
+			getBlankLines()
+
+			// Adders
+			addOneCodeLine()
+			addOneCommentLine()
+			addOneBlankLine()
+
+	InputFile
+		
+		private
+			Counter lineCounter
+
+			removeSpaces()	// Elimina espacios de string
+			fileEmpty() 		// Valida si el archivo esta vacio
+
+		public 
+
+			ifstram fFile
+
+			// Lee el archivo 
+			scanFile()	
+
+Funcionamiento
+	
+	1. Usuario escribe nombre de archivo
+	2. Programa busca archivo
+		2.1 Si el archivo abre, continua
+		2.2 Si el archivo no esta vacío, continúa
+	3. Llega una nueva linea y la guarda en un string
+	4. Quita los espacios del string
+	5. Busca comentarios
+		5.1 Si encuentra // continua y addOneCommentLine()
+		5.2 Si encuentra /* enciende booleano que indica que estamos en comentario y sigue los pasos 1 al 5 hasta encontrat */. Por cada linea añadida, hacemos addOneCommentLine()
+	6. Si la linea está vacía, hacemos addOneBlankLine
+	7. Si ninguna de las condiciones anteriores se cumplió, hacemos addOneCodeLine()
+	8. Continuamos pasos 3 a 8 hasta que el archivo termine
+	9. Desplegamos datos en consola con getCodeLines() getCommentLines() y getBlankLines() 

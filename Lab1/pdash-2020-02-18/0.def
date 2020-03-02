@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<defectLog>
+  <defect num="1" type="Syntax" inj="Code" rem="Compile" ft="0.8" fd="" desc="Al momento de compilar el problema, se obtuvieron múltiples errores de sintaxis por lo que tangencialmente, el programa no compilóAl momento de compilar el problema, se obtuvieron múltiples errores de sintaxis por lo que tangencialmente, el programa no compiló" date="@1582067950005" />
+  <defect num="2" type="System" inj="Design" rem="Code" ft="2.2" fd="" desc="Al momento de probar el código, aparecieron múltiples errores referentes a cómo leía el compilador los espacios en blanco. " date="@1582068022102" />
+</defectLog>
