@@ -10,12 +10,12 @@ class Counter {
 private:
 	char type;
 	string name;
-	unsigned long long int codeLines; 			// T
-	unsigned long long int itemLines;				// I
-	unsigned long long int baseLines;				// B
-	unsigned long long int deletedLines; 		// D
+	unsigned long long int codeLines;			// T
+	unsigned long long int itemLines;			// I
+	unsigned long long int baseLines;			// B
+	unsigned long long int deletedLines;		// D
 	unsigned long long int modifiedLines;		// M
-	unsigned long long int addedLines; 			// A
+	unsigned long long int addedLines;			// A
 
 public:
 
@@ -227,7 +227,7 @@ public:
 		for (int i=0; i<lineCounters.size(); i++) {
 			
 			if (lineCounters[i].getType() == 'B') {
-				cout << lineCounters[i].getName();
+				cout << "\t" << lineCounters[i].getName();
 				cout << ": T=" << lineCounters[i].getCodeLines(); 
 				cout << ", I=" << lineCounters[i].getItemLines(); 
 				cout << ", B=" << lineCounters[i].getBaseLines();
@@ -240,10 +240,25 @@ public:
 		cout << "PARTES NUEVAS:" << endl;
 		for (int i=0; i<lineCounters.size(); i++) {
 
-			if (lineCounters[i].getType == 'N') {
-
+			if (lineCounters[i].getType() == 'N') {
+				cout << "\t" << lineCounters[i].getName();
+				cout << ": T=" << lineCounters[i].getCodeLines(); 
+				cout << ", I=" << lineCounters[i].getItemLines() << endl; 
 			}
-		}
+		} 	cout << "--------------------------------------------" << endl;
+		
+		cout << "PARTES REUSADAS:" << endl;
+		for (int i=0; i<lineCounters.size(); i++) {
+
+			if(lineCounters[i].getType() == 'R') {
+				cout << "\t" << lineCounters[i].getName();
+				cout << ": T=" << lineCounters[i].getCodeLines();
+				cout << ", I=" << lineCounters[i].getItemLines();
+				cout << ", B=" << lineCounters[i].getBaseLines() << endl;
+			}
+		}		cout << "--------------------------------------------" << endl;
+		
+		cout << "Total de LDC=" << totalLines;
 	}	
 };
 
