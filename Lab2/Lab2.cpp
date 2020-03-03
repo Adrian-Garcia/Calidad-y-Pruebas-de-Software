@@ -9,18 +9,19 @@
 
 using namespace std;
 
+// .b=14
 // .i
 class Counter {
 
 private:
 	char type;
 	string name;
-	unsigned long long int codeLines;			// T
-	unsigned long long int itemLines;			// I
-	unsigned long long int baseLines;			// B
-	unsigned long long int deletedLines;		// D
-	unsigned long long int modifiedLines;		// M
-	unsigned long long int addedLines;			// A
+	unsigned long long int codeLines;
+	unsigned long long int itemLines;			// .m
+	unsigned long long int baseLines;			// .m
+	unsigned long long int deletedLines;	
+	unsigned long long int modifiedLines;	
+	unsigned long long int addedLines;		
 
 public:
 
@@ -28,8 +29,8 @@ public:
 		type = '0';
 		name = "";
 		codeLines = 0;
-		itemLines = 0;
-		baseLines = 0;
+		itemLines = 0;	//.m
+		baseLines = 0;	//.m
 		deletedLines = 0;
 		modifiedLines = 0;
 		addedLines = 0;
@@ -47,12 +48,12 @@ public:
 		this->codeLines++;
 	}
 
-	void addOneItemLine() {
-		this->itemLines++;
+	void addOneItemLine() {			//.m
+		this->itemLines++;				//.m
 	}
 
-	void addOneModifiedLine() {
-		this->modifiedLines++;
+	void addOneModifiedLine() {	//.m
+		this->modifiedLines++;		//.m
 	}
 
 	void setBaseLines(unsigned long long int baseLines) {
@@ -123,12 +124,13 @@ public:
 	}
 };
 
+// .b=36
 // .i
 class InputFile {
 
 private:
 
-	vector<Counter> lineCounters;
+	vector<Counter> lineCounters; //.m
 
 	// Elimina los espacios de un string
 	string removeSpaces(string str) { 
@@ -435,6 +437,8 @@ public:
 	}	
 };
 
+//.b=4
+//.i
 int main() {
 
 	cout << "Colocar nombres de archivos y dar 0 para terminar" << endl << endl;

@@ -1,0 +1,9 @@
+//.d=10
+//.m
+//.b=1
+test2 = "//.m"
+asd
+asd
+asd
+asd
+asd
