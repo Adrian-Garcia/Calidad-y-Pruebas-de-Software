@@ -2,9 +2,13 @@
 #include <fstream>
 #include <string>
 #include <vector>
+// #include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
 
 using namespace std;
 
+// .i
 class Counter {
 
 private:
@@ -46,16 +50,16 @@ public:
 		this->commentLines++;
 	}
 
+	void addOneModifiedLine() {
+		this->modifiedLines++;
+	}
+
 	void setBaseLines(unsigned long long int baseLines) {
 		this->baseLines = baseLines;
 	}
 
 	void setDeletedLines(unsigned long long int deletedLines) {
 		this->deletedLines = deletedLines;
-	}
-
-	void setModifiedLines(unsigned long long int modifiedLines) {
-		this->modifiedLines = modifiedLines;
 	}
 
 	void setAddedLines(unsigned long long int addedLines) {
@@ -106,6 +110,7 @@ public:
 	}
 };
 
+// .i
 class InputFile {
 
 private:
@@ -124,8 +129,44 @@ private:
 		return result;
 	}
 
+	// Verifica que el archivo no esté vacio
 	bool fileEmpty(ifstream& file) {
 		return file.peek() == std::ifstream::traits_type::eof();
+	}
+
+	// Obtiene el numero de base o borrado segun sea el caso
+	int getNum(string line, char type) {
+
+		string result = "";
+		string key;
+		int position;
+		int i;
+		
+		key = (type == 'd') ?
+			"//.d=" : "//.b=";
+
+		position = line.find(key) + 5;
+		i=position;
+
+		while (isdigit(line[i])) {
+			result.push_back(line[i]);
+			i++;
+		}
+
+		return stoi(result);
+	}
+
+	bool haveNoBrackets(string line) {
+
+		int i=0;
+
+		while (i < line.size()) {
+			if (line[i] != '{' line[i] != '}' && line[i] != ';') {
+				return true;
+			} i++;
+		}
+
+		return false;
 	}
 
 public:
@@ -137,14 +178,19 @@ public:
 	// Funcion principal que lee el archivo y cuenta lineas
 	void scanFile() {
 
-		// .M
+		// .m
 		Counter currentFile;
+
 		bool inComment = false;
+		int position;
+		int deletedLines;
+		int totalLines = 0;
+
 		string sLineContent;
 		string sFileName;
 
 		// Pedimos nombre del archivo
-		// .M
+		// .m
 		getline(cin, fFileName);	
 
 		while (fFileName != "") { 
@@ -172,31 +218,37 @@ public:
 
 					if (sLineContent.find("*/") != -1) {
 						inComment = false;
-						currentFile.addOneCommentLine();				
+						// .d=1
 						continue;
 					}
-
-					currentFile.addOneCommentLine();
+					// .d=1
 				}
 
 				// Si no estamos en comentarios
 				else if (!inComment) {
 
 					// Busca items
-					if (sLineContent.find("//.i")) {
+					if (sLineContent.find("//.i") != -1) {
 						currentFile.addOneItemLine();
 					}
 
 					// Busca lineas borradas 
-					if (sLineContent.find("//.d=")) {
-						
-						currentFile.
+					else if (sLineContent.find("//.d=") != -1) {
+						deletedLinesNum = getNum(sLineContent, 'd');
+						currentFile.setDeletedLines(currentFile.getDeletedLines() + deletedLinesNum);
 					}
 
-					// Busca commentarios de una linea
-					else if (sLineContent.find("//") != -1) {
-						currentFile.addOneCommentLine();
+					// Busca lineas base
+					else if (sLineContent.find("//.b=") != -1) {
+						baseLinesNum = getNum(sLineContent, 'b');
+						currentFile.setBaseLines(currenFile.getBaseLines() + baseLinesNum);
 					}
+
+					else if (sLineContent.find("//.m")) {
+						currentFile.addOneModifiedLine();
+					}
+
+					// .d=4
 
 					// Busca bloques de comentarios
 					else if (sLineContent.find("/*") != -1) {
@@ -205,18 +257,37 @@ public:
 					}
 
 					// Verify if there is a character on the string
-					else if (sLineContent.size() > 0) {
+					else if (sLineContent.size() > 0 && haveNoBrackets(sLineContent)) {
 						currentFile.addOneCodeLine();
 					} 
 
 					// Add blank space
 					else {
-						lineCounter.addOneBlankLine();
+						continue;
 					}
 				}
 			}
 
 			// .d = 7
+
+			// New file
+			if (!currentFile.getDeletedLines() && !currentFile.getModifiedLines())
+				currentFile.setType('N');
+
+			else if (currentFile.getBaseLines()>0 && 
+				 (currentFile.getDeletedLines()>0 || currentFile.getModifiedLines()>0))
+				currentFile.setType('B');
+
+			else
+				currentFile.setType('R');	
+
+			//  A = T - B + D
+			currentFile.setAddedLines(currentFile.getCodeLines() - 
+																currentFile.getBaseLines() + 
+																currentFile.getDeletedLines());
+
+			lineCounters.push_back(currentFile);
+			currentFile.clear();
 
 			// Cerramos programa
 			fFile.close();
@@ -234,6 +305,8 @@ public:
 				cout << ", D=" << lineCounters[i].getDeletedLines();
 				cout << ", M=" << lineCounters[i].getModifiedLines(); 
 				cout << ", A=" << lineCounters[i].getAddedLines() << endl;
+
+				totalLines+=getCodeLines();
 			} 
 		} 	cout << "--------------------------------------------" << endl;
 		
@@ -243,7 +316,8 @@ public:
 			if (lineCounters[i].getType() == 'N') {
 				cout << "\t" << lineCounters[i].getName();
 				cout << ": T=" << lineCounters[i].getCodeLines(); 
-				cout << ", I=" << lineCounters[i].getItemLines() << endl; 
+				cout << ", I=" << lineCounters[i].getItemLines() << endl;
+				totalLines+=getCodeLines(); 
 			}
 		} 	cout << "--------------------------------------------" << endl;
 		
@@ -255,6 +329,7 @@ public:
 				cout << ": T=" << lineCounters[i].getCodeLines();
 				cout << ", I=" << lineCounters[i].getItemLines();
 				cout << ", B=" << lineCounters[i].getBaseLines() << endl;
+				totalLines+=getCodeLines();
 			}
 		}		cout << "--------------------------------------------" << endl;
 		

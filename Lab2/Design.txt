@@ -1,4 +1,4 @@
-keep same clases
+Lab 2 Design
 
 Counter
 	private:
