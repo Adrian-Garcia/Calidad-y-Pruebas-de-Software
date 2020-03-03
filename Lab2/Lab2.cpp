@@ -67,6 +67,18 @@ public:
 		this->addedLines = addedLines;
 	}
 
+	void setCounter(Counter oldCounter) {
+
+		this->type = oldCounter.type;
+		this->name = oldCounter.name;
+		this->codeLines = oldCounter.codeLines;
+		this->itemLines = oldCounter.itemLines;
+		this->baseLines = oldCounter.baseLines;
+		this->deletedLines = oldCounter.deletedLines;
+		this->modifiedLines = oldCounter.modifiedLines;
+		this->addedLines = oldCounter.addedLines;
+	}
+
 	char getType() {
 		return type;
 	}
@@ -166,6 +178,9 @@ private:
 
 	bool haveNoBrackets(string line) {
 
+		if (line.find("//") < 2)
+			return false;
+
 		for (int i=0; i<line.size(); i++) {
 			if (line[i] != '{' && line[i] != '}' && line[i] != ';') {
 				return true;
@@ -185,6 +200,34 @@ private:
 		return fileName;
 	}
 
+	bool validateM(string line) {
+
+		bool quotes = false;
+
+		for (int i=0; i<line.size(); i++) {
+			
+			if (!quotes && line[i] == '"') {
+				quotes = true;
+				continue;
+			}
+
+			if (line[i] == '/') {
+				if (i < line.size()-4) {
+					if (quotes && line[i+1] == '/' && 
+							line[i+2] == '.' && line[i+3] == 'm')
+						return false;
+				}
+			}
+
+			if (quotes && line[i] == '"') {
+				quotes = false;
+				continue;
+			}
+		}
+
+		return true;
+	}
+
 public:
 
 	ifstream fFile;
@@ -198,6 +241,7 @@ public:
 		Counter currentFile;
 
 		bool inComment = false;
+		bool newFile = false;
 		int position;
 		int deletedLinesNum;
 		int baseLinesNum;
@@ -217,12 +261,20 @@ public:
 			// Si el archivo no existe o esta vacio, la funcion termina
 			if (fFile.fail() || fileEmpty(fFile)) {
 				break;
-				getline(cin, FileName);	
 				// .M
 				continue;
 			}
 			
-			currentFile.setName(FileName);
+			for (int i=0; i<lineCounters.size(); i++) {
+				if (lineCounters[i].getName() == fix(FileName)) {
+					currentFile.setCounter(lineCounters[i]);
+					newFile = true;
+				}
+			}
+
+			if (!newFile) {
+				currentFile.setName(fix(FileName));
+			}
 
 			// Recorremos el archivo
 			while (!fFile.eof()) {
@@ -244,25 +296,40 @@ public:
 				// Si no estamos en comentarios
 				else if (!inComment) {
 
-					// Busca items
-					if (sLineContent.find("//.i") != -1) {
-						currentFile.addOneItemLine();
-					}
+					// Hay un comentario
+					if (sLineContent.find("//") != -1) {
 
-					// Busca lineas borradas 
-					if (sLineContent.find("//.d=") != -1) {
-						deletedLinesNum = getNum(sLineContent, 'd');
-						currentFile.setDeletedLines(currentFile.getDeletedLines() + deletedLinesNum);
-					}
+						// Busca items
+						if (sLineContent.find("//.i") != -1) {
+							currentFile.addOneItemLine();
+							continue;
+						}
 
-					// Busca lineas base
-					if (sLineContent.find("//.b=") != -1) {
-						baseLinesNum = getNum(sLineContent, 'b');
-						currentFile.setBaseLines(currentFile.getBaseLines() + baseLinesNum);
-					}
+						// Busca lineas borradas 
+						if (sLineContent.find("//.d=") != -1) {
+							deletedLinesNum = getNum(sLineContent, 'd');
+							currentFile.setDeletedLines(currentFile.getDeletedLines() + deletedLinesNum);
+							continue;
+						}
 
-					if (sLineContent.find("//.m") != -1) {
-						currentFile.addOneModifiedLine();
+						// Busca lineas base
+						if (sLineContent.find("//.b=") != -1) {
+							baseLinesNum = getNum(sLineContent, 'b');
+							currentFile.setBaseLines(currentFile.getBaseLines() + baseLinesNum);
+							continue;
+						}
+
+						if (sLineContent.find("//.m") != -1) {
+							
+							if (validateM(sLineContent)) {
+								currentFile.addOneModifiedLine();
+							}
+						}
+
+						if (sLineContent.size() > 2 && haveNoBrackets(sLineContent)) {
+							currentFile.addOneCodeLine();
+							continue;
+						}
 					}
 
 					// .d=4
@@ -277,26 +344,6 @@ public:
 						continue;
 					}
 
-					if (sLineContent.find("//") != -1) {
-						
-						bool flag = false;
-
-						if (sLineContent.find("//.b="))
-							flag = true;
-
-						if (sLineContent.find("//.d="))
-							flag = true;
-
-						if (sLineContent.find("//.i"))
-							flag = true;
-
-						if (sLineContent.find("//.m"))
-							flag = true;
-
-						if (!flag)
-							continue;
-					}
-
 					// Verify if there is a character on the string
 					if (sLineContent.size() > 0 && haveNoBrackets(sLineContent)) {
 						currentFile.addOneCodeLine();
@@ -307,18 +354,30 @@ public:
 			// .d = 7
 
 			// New file
-			if (!currentFile.getDeletedLines() && !currentFile.getModifiedLines())
-				currentFile.setType('N');
+			if (!currentFile.getDeletedLines() && !currentFile.getModifiedLines() && currentFile.getBaseLines() > 0)
+				currentFile.setType('R');
 
 			else if (currentFile.getBaseLines()>0 && 
 				 (currentFile.getDeletedLines()>0 || currentFile.getModifiedLines()>0))
 				currentFile.setType('B');
 
 			else
-				currentFile.setType('R');	
+				currentFile.setType('N');	
 
-			lineCounters.push_back(currentFile);
+			if (!newFile) {
+				lineCounters.push_back(currentFile);
+			}
+
+			else {
+				for (int i=0; i<lineCounters.size(); i++) {
+					if (lineCounters[i].getName() == currentFile.getName()){
+						lineCounters[i].setCounter(currentFile);
+					}
+				}
+			}
+
 			currentFile.clear();
+			newFile = false;
 
 			// Cerramos programa
 			fFile.close();
@@ -378,6 +437,7 @@ public:
 
 int main() {
 
+	cout << "Colocar nombres de archivos y dar 0 para terminar" << endl << endl;
 	InputFile input;
 	input.scanFile();
 
