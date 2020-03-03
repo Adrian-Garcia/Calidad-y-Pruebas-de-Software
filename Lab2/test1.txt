@@ -1,0 +1,12 @@
+//esta parte es base
+//.b=38
+
+//.m
+//.d=1
+//.b=40
+class Cuenta
+{
+  declara;
+  declara;
+  declara;
+}

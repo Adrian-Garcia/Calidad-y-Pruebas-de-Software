@@ -4,59 +4,59 @@ linea;
 		        
 class Lista
 		
-	linea;
-	linea;
+	linea1;
+	linea2;
 	//.b=15		
 	//.i
-		linea;
-		linea;
+		linea3;
+		linea4;
   
 		//.d=1
     
-		linea;
-		linea;
-		linea;
-		linea;
-		linea;
+		linea5;
+		linea6;
+		linea7;
+		linea8;
+		linea9;
 
 	//.i
-		linea;   //.m  
+		linea1;   //.m  
 		//.b=50
-		linea;
-		linea;
-		linea;
+		linea2;
+		linea3;
+		linea4;
 
 		//.d=33
     
-		linea;
-		linea;
-		linea;//.m	
-		linea;
-		linea;
-		linea;
-		linea;
-		linea;
-		linea;
-		linea;
+		linea5;
+		linea6;
+		linea7;//.m	
+		linea8;
+		linea9;
+		linea1;
+		linea2;
+		linea3;
+		linea4;
+		linea5;
 
 	//.i
-		linea;
+		linea6;
 	
 	//.i
-		linea;
-		linea;
-		linea;
-		linea;
-		linea;
+		linea7;
+		linea8;
+		linea9;
+		linea1;
+		linea2;
 
 		//.d=1
 
-		linea;
-		linea;
-		linea;//.m
-		linea;
-		linea;
-		linea;
-		linea;
-		linea;
-		linea;
+		linea3;
+		linea4;
+		linea5;//.m
+		linea6;
+		linea7;
+		linea8;
+		linea9;
+		linea1;
+		linea2;

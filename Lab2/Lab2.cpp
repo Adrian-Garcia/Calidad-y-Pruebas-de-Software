@@ -2,9 +2,10 @@
 #include <fstream>
 #include <string>
 #include <vector>
-// #include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <stack>
 
 using namespace std;
 
@@ -47,7 +48,7 @@ public:
 	}
 
 	void addOneItemLine() {
-		this->commentLines++;
+		this->itemLines++;
 	}
 
 	void addOneModifiedLine() {
@@ -99,7 +100,7 @@ public:
 	}
 
 	void clear() {
-		this->type = '';
+		this->type = '0';
 		this->name = "";
 		this->codeLines = 0;
 		this->itemLines = 0;
@@ -137,36 +138,51 @@ private:
 	// Obtiene el numero de base o borrado segun sea el caso
 	int getNum(string line, char type) {
 
-		string result = "";
 		string key;
 		int position;
-		int i;
-		
+		int multiplier = 1;
+		int res = 0;
+		stack<char> number;
+
 		key = (type == 'd') ?
 			"//.d=" : "//.b=";
 
 		position = line.find(key) + 5;
-		i=position;
-
+		int i=position;
+		
 		while (isdigit(line[i])) {
-			result.push_back(line[i]);
+			number.push(line[i]);
 			i++;
 		}
 
-		return stoi(result);
+		while (!number.empty()) {
+			res += (number.top() - 48) * multiplier;
+			multiplier *= 10;
+			number.pop();
+		}
+
+		return res;
 	}
 
 	bool haveNoBrackets(string line) {
 
-		int i=0;
-
-		while (i < line.size()) {
-			if (line[i] != '{' line[i] != '}' && line[i] != ';') {
+		for (int i=0; i<line.size(); i++) {
+			if (line[i] != '{' && line[i] != '}' && line[i] != ';') {
 				return true;
-			} i++;
+			}
 		}
 
 		return false;
+	}
+
+	string fix(string fileName) {
+
+		int pos = fileName.find('.');
+
+		if (pos != -1)
+			return fileName.substr(0, pos);
+		
+		return fileName;
 	}
 
 public:
@@ -183,33 +199,34 @@ public:
 
 		bool inComment = false;
 		int position;
-		int deletedLines;
+		int deletedLinesNum;
+		int baseLinesNum;
 		int totalLines = 0;
 
 		string sLineContent;
-		string sFileName;
+		string FileName;
 
 		// Pedimos nombre del archivo
 		// .m
-		getline(cin, fFileName);	
+		cin >> FileName;
 
-		while (fFileName != "") { 
+		while (FileName != "" || FileName != "0") {
 
-			fFile.open(sFileName.c_str());
+			fFile.open(FileName.c_str());
 
 			// Si el archivo no existe o esta vacio, la funcion termina
 			if (fFile.fail() || fileEmpty(fFile)) {
-				
-				getline(cin, fFileName);	
+				break;
+				getline(cin, FileName);	
 				// .M
 				continue;
 			}
-
-			currentFile.setName(fFileName)
+			
+			currentFile.setName(FileName);
 
 			// Recorremos el archivo
 			while (!fFile.eof()) {
-
+				
 				getline(fFile, sLineContent);
 				sLineContent = removeSpaces(sLineContent);
 
@@ -233,37 +250,56 @@ public:
 					}
 
 					// Busca lineas borradas 
-					else if (sLineContent.find("//.d=") != -1) {
+					if (sLineContent.find("//.d=") != -1) {
 						deletedLinesNum = getNum(sLineContent, 'd');
 						currentFile.setDeletedLines(currentFile.getDeletedLines() + deletedLinesNum);
 					}
 
 					// Busca lineas base
-					else if (sLineContent.find("//.b=") != -1) {
+					if (sLineContent.find("//.b=") != -1) {
 						baseLinesNum = getNum(sLineContent, 'b');
-						currentFile.setBaseLines(currenFile.getBaseLines() + baseLinesNum);
+						currentFile.setBaseLines(currentFile.getBaseLines() + baseLinesNum);
 					}
 
-					else if (sLineContent.find("//.m")) {
+					if (sLineContent.find("//.m") != -1) {
 						currentFile.addOneModifiedLine();
 					}
 
 					// .d=4
 
 					// Busca bloques de comentarios
-					else if (sLineContent.find("/*") != -1) {
-						currentFile.addOneCommentLine();
+					if (sLineContent.find("/*") != -1) {
 						inComment = true;
+						continue;
+					}
+
+					if (sLineContent == "") {
+						continue;
+					}
+
+					if (sLineContent.find("//") != -1) {
+						
+						bool flag = false;
+
+						if (sLineContent.find("//.b="))
+							flag = true;
+
+						if (sLineContent.find("//.d="))
+							flag = true;
+
+						if (sLineContent.find("//.i"))
+							flag = true;
+
+						if (sLineContent.find("//.m"))
+							flag = true;
+
+						if (!flag)
+							continue;
 					}
 
 					// Verify if there is a character on the string
-					else if (sLineContent.size() > 0 && haveNoBrackets(sLineContent)) {
+					if (sLineContent.size() > 0 && haveNoBrackets(sLineContent)) {
 						currentFile.addOneCodeLine();
-					} 
-
-					// Add blank space
-					else {
-						continue;
 					}
 				}
 			}
@@ -281,16 +317,13 @@ public:
 			else
 				currentFile.setType('R');	
 
-			//  A = T - B + D
-			currentFile.setAddedLines(currentFile.getCodeLines() - 
-																currentFile.getBaseLines() + 
-																currentFile.getDeletedLines());
-
 			lineCounters.push_back(currentFile);
 			currentFile.clear();
 
 			// Cerramos programa
 			fFile.close();
+
+			cin >> FileName;
 		}
 
 		// Imprimimos resultados
@@ -298,7 +331,11 @@ public:
 		for (int i=0; i<lineCounters.size(); i++) {
 			
 			if (lineCounters[i].getType() == 'B') {
-				cout << "\t" << lineCounters[i].getName();
+
+				//  A = T - B + D
+				lineCounters[i].setAddedLines(lineCounters[i].getCodeLines() - lineCounters[i].getBaseLines() + lineCounters[i].getDeletedLines());
+
+				cout << "\t" << fix(lineCounters[i].getName());
 				cout << ": T=" << lineCounters[i].getCodeLines(); 
 				cout << ", I=" << lineCounters[i].getItemLines(); 
 				cout << ", B=" << lineCounters[i].getBaseLines();
@@ -306,7 +343,7 @@ public:
 				cout << ", M=" << lineCounters[i].getModifiedLines(); 
 				cout << ", A=" << lineCounters[i].getAddedLines() << endl;
 
-				totalLines+=getCodeLines();
+				totalLines+=lineCounters[i].getCodeLines();
 			} 
 		} 	cout << "--------------------------------------------" << endl;
 		
@@ -314,10 +351,11 @@ public:
 		for (int i=0; i<lineCounters.size(); i++) {
 
 			if (lineCounters[i].getType() == 'N') {
-				cout << "\t" << lineCounters[i].getName();
+				cout << "\t" << fix(lineCounters[i].getName());
 				cout << ": T=" << lineCounters[i].getCodeLines(); 
 				cout << ", I=" << lineCounters[i].getItemLines() << endl;
-				totalLines+=getCodeLines(); 
+	
+				totalLines+=lineCounters[i].getCodeLines();
 			}
 		} 	cout << "--------------------------------------------" << endl;
 		
@@ -325,11 +363,12 @@ public:
 		for (int i=0; i<lineCounters.size(); i++) {
 
 			if(lineCounters[i].getType() == 'R') {
-				cout << "\t" << lineCounters[i].getName();
+				cout << "\t" << fix(lineCounters[i].getName());
 				cout << ": T=" << lineCounters[i].getCodeLines();
 				cout << ", I=" << lineCounters[i].getItemLines();
 				cout << ", B=" << lineCounters[i].getBaseLines() << endl;
-				totalLines+=getCodeLines();
+				
+				totalLines+=lineCounters[i].getCodeLines();
 			}
 		}		cout << "--------------------------------------------" << endl;
 		
