@@ -1,0 +1,21 @@
+Paso?1
+Archivos?C:\Users\adria\Documents\Universidad\6to Semestre\Calidad\Lab1\pdash-Adri_n_Garc_a_L_pez-2020-03-04.zip
+Comentario?
+Paso?2
+Archivos?C:\Users\adria\Documents\Universidad\6to Semestre\Calidad\Lab1\DiseñoDelPrograma.txt
+Comentario?
+Paso?3
+Archivos?C:\Users\adria\Documents\Universidad\6to Semestre\Calidad\Lab1\progrma.cpp
+Comentario?
+Paso?4
+Archivos?C:\Users\adria\Documents\Universidad\6to Semestre\Calidad\Lab1\programa.exe
+Comentario?
+Paso?5
+Archivos?C:\Users\adria\Documents\Universidad\6to Semestre\Calidad\Lab1\Formato de Diseño de Pruebas y Evidencia Funcionamiento.docx
+Comentario?
+Paso?6
+Archivos?C:\Users\adria\Documents\Universidad\6to Semestre\Calidad\Lab1\archivo8.txt?C:\Users\adria\Documents\Universidad\6to Semestre\Calidad\Lab1\archivo1.txt?C:\Users\adria\Documents\Universidad\6to Semestre\Calidad\Lab1\archivo2.txt?C:\Users\adria\Documents\Universidad\6to Semestre\Calidad\Lab1\archivo7.txt?C:\Users\adria\Documents\Universidad\6to Semestre\Calidad\Lab1\archivo4.txt?C:\Users\adria\Documents\Universidad\6to Semestre\Calidad\Lab1\archivo5.txt?C:\Users\adria\Documents\Universidad\6to Semestre\Calidad\Lab1\archivo6.txt?C:\Users\adria\Documents\Universidad\6to Semestre\Calidad\Lab1\archivo3.txt
+Comentario?
+Paso?7
+Archivos?C:\Users\adria\Documents\Universidad\6to Semestre\Calidad\Lab1\Checklist de Apoyo para el Postmortem PSP0.docx
+Comentario?

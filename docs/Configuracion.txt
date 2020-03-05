@@ -1,0 +1,9 @@
+Nombre|Adrian
+ApellidoP|Garcia
+ApellidoM|Lopez
+ID|A01351166
+Organizacion|ITESM
+Lenguaje|C++
+Extension|.h, .hh, .hpp, .hxx, .h++, .cc, .cpp, .cxx, .c++
+Dir1|C:\Users\adria\Documents\Universidad\6to Semestre\Calidad-y-Pruebas-de-Software\Lab2
+Dir2|C:\Users\adria\Documents\Universidad\6to Semestre\Calidad-y-Pruebas-de-Software\Lab2
