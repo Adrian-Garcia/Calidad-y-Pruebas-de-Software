@@ -1,0 +1,55 @@
+//.i
+class InputFile {
+
+private:
+	
+	DataSet dataSet;
+
+// .b=9
+public:
+
+	InputFile() {}
+
+	ifstream fFile;	
+
+	//.d=53
+	
+	void run() {
+
+		string sLineContent;
+		string FileName;		
+
+		cin >> FileName;
+
+		fFile.open(FileName.c_str());
+
+		// Si el archivo no existe o esta vacio, la funcion termina
+		if (fFile.fail()) { //.m			
+			cout << "Archivo no encontrado" << endl; //.m
+			//.d=2
+			return;
+		}
+
+		getline(fFile, sLineContent);
+		stringstream ss(sLineContent);
+
+		dataSet.set_xk(sLineContent);
+
+		//.d=46
+		while(getline(fFile, sLineContent))
+			dataSet.xyPushBack(sLineContent); //.m
+
+		dataSet.calculateData();
+
+		cout << "N  = " << dataSet.getN() << endl;
+		cout << "xk = " << dataSet.get_xk() << endl;
+		cout << fixed;
+		cout << setprecision(5) << "r  = " << dataSet.get_r() << endl;
+		cout << setprecision(5) << "r2 = " << dataSet.get_r2() << endl;
+		cout << setprecision(5) << "b0 = " << dataSet.get_b0() << endl;
+		cout << setprecision(5) << "b1 = " << dataSet.get_b1() << endl;
+		cout << setprecision(5) << "yk = " << dataSet.get_yk() << endl;
+
+		fFile.close();
+	}
+};

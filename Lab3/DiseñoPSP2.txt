@@ -1,0 +1,141 @@
+Diseño PSP2
+
+	Algoritmo narrado
+
+		1. Obtener primer linea, Xk
+
+		2. Por cada renglon leído
+			2.1	Obtener linea completa y sus numeros
+			2.2	Identificar la coma
+			2.3	Obtenemos primer numero con stoi(linea.substr(0, posicionDeLaComa-1))
+			2.4	Obtenemos segundo número con stoi(linea.substr(posicionDeLaComa+1, linea.size()-1) 
+			2.5	Almacenar datos en un vector
+
+		3. Calcular datos
+
+		4. Desplegar datos en pantalla
+
+	Pseudo código
+
+		include 
+			iostram
+			fstram
+			string
+			vector
+			stdio.h
+			stdlib.h
+			ctype.h
+
+		class DataSet {
+
+			private:
+				
+				vector<lineXY> xy;
+				double xk;
+				double r;
+				double r2;
+				double b0;
+				double b1;
+				double yk;
+
+				rCalculate();
+				r2Calculate();
+				b0Calculate();
+				b1Calculate();
+				ykCalculate();
+
+			public:
+				
+				DataSet() {
+					xk = -1;
+					r = -1;
+					r2 = -1;
+					b0 = -1;
+					b1 = -1; 
+					yk = -1;
+				}
+
+				set_xk(string xk) {
+					this->xk = stoi(xk) 
+				}
+
+				xyPushBack(string xy) {
+
+					x = stoi(xy.substr(0, coma-1));
+					y = stoi(xy.substr(coma+1, linea.length()-1));
+
+					xy.pushback(x, y);
+				}
+
+				get_xk() {
+					return xk;
+				}
+
+				get_r() {
+					if r == -1
+						r = rCalculate();
+
+					return r;
+				}
+
+				get_r2() {
+					if r2 == -1
+						r2 = r2Calculate();
+
+					return r2;
+				}
+
+				get_b0() {
+					if b0 == -1
+						b0 = b0Calculate();
+					return b0;
+				}
+
+				get_b1() {
+					if b1 == -1
+						b1 = b1Calculate();
+					return b1;
+				}
+
+				get_yk() {
+					if yk == -1
+						yk = ykCalculate();
+					return yk;
+				}
+		}
+
+		class InputFile {
+
+			private:
+				DataSet
+				calculateData();
+				printData();
+
+			public:
+				run() {
+
+					cin >> fileName;
+
+					open(fileName);
+
+					if fFile.fail()
+						return;
+
+					getline(fileName, line);
+
+					setxy(line);
+
+					while (getline(fileName, line)) {
+
+						xyPushBack(line);
+					}
+
+
+				}
+		}
+
+		int main() {
+			InputFile program;
+
+			program.run();
+		}
