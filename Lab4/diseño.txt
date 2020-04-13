@@ -1,0 +1,185 @@
+Fase de diseño 
+	
+	Externo dinámico - OST
+
+		-------------------------------------------------------------------------
+
+		Scenario No: 1
+		User objective: Calculate integral using Simpson method 
+		System Objective: Illustrate functionality of the program
+
+		Source 			Step 			Action	 													Comments
+		User 				1					Execute program
+		System			2 				Ask for x
+		User 				3 				Give an integer value for x
+		System 			4					if x is an integer, save x
+		System			5 				Ask for dof
+		User 				6 				Give a real value for dof
+		System 			7 				if dof is a real value, save dof	
+		System 			8 				Calculates value of integral 
+		System 			9 				Print result 
+
+		-------------------------------------------------------------------------
+
+		Scenario No: 2
+		User objective: Calculate integral using Simpson method giving wrong inputs 
+		System Objective: Ask for the user for valid information
+
+		Source 			Step 			Action 														Comments
+		User 				1					Execute program
+		System			2 				Ask for an integer value x
+		User 				3 				Give any value for x
+		System 			4 				if x is not integer, go to step 2	
+		System 			5 				Save value of x
+		System 			6 				Ask for a real value for dof
+		User 				7 				Give any value for dof
+		System 			8 				if dof is not real, go to step 6	
+		System 			9 				Save value of dof
+		System 			10 				Calculates value of integral 
+		System 			11 				Print result 
+
+		-------------------------------------------------------------------------
+
+	Externo estático - FST
+	
+		-------------------------------------------------------------------------
+
+		Class Name: SimpsonRule 
+		Parent Class: 
+
+		Atributes
+			Declaration 			Description
+			double x  				Store value of x
+			int dof						Store value of dog
+			double E 					Store value of aproximated error
+			double p 					Store value of final result
+
+		Items
+			Declaration 			Description 
+			getX()						return value of x
+			getDof()					return value of dof
+			getP()						return value of p
+			print()						printVlaues of x, dof, p
+			setX(newX)				Set value o
+			setDof(newDof)		Set value of dof
+			calculate() 			Calculate value of p
+
+
+		-------------------------------------------------------------------------
+
+		Class Name: Getter
+		Parent Class: None
+
+		Atributes
+			Declaration 			Description
+			SimpsonRule				Used to calculate data
+
+		Items
+			Declaration 			Description 
+			getData()					Ask user to input data for x and dof
+			run() 						uses calculate() to display information
+
+		-------------------------------------------------------------------------
+
+		Class Name: main
+		Parent Class: none
+
+		Atributes
+			Declaration 			Description
+			none
+
+		Items
+			Declaration 			Description 
+			int main()				Initiates de program. Run classes in the program. 							
+
+		-------------------------------------------------------------------------
+
+	Interno dinámico - LST
+
+		-------------------------------------------------------------------------
+
+		Class Name: SimpsonRule
+		Method Name: getX
+		Parameters: none
+
+		Pseoudocode
+
+			return this->x
+
+		-------------------------------------------------------------------------
+
+		Class Name: SimpsonRule
+		Method Name: getDof
+		Parameters: none
+
+		Pseoudocode	
+			 return this->dof
+
+		-------------------------------------------------------------------------
+
+		Class Name: SimpsonRule
+		Method Name: setX
+		Parameters: newX
+
+		Pseoudocode	
+			 this->x = x
+
+		-------------------------------------------------------------------------
+
+		Class Name: SimpsonRule
+		Method Name: setDof
+		Parameters: newDof
+
+		Pseoudocode	
+			this->dof = newDof
+
+		-------------------------------------------------------------------------
+
+		Class Name: SimpsonRule
+		Method Name: calculate
+		Parameters: none
+
+		Pseoudocode	
+
+		-------------------------------------------------------------------------
+
+		Class Name: Getter
+		Method Name: getData
+		Parameters: none
+
+		Pseoudocode	
+			
+			cin>>x;
+			cin>>dof;
+
+			SimpsonRule.setX(x)
+			SimpsonRule.setDof(dof);
+
+		-------------------------------------------------------------------------
+
+		Class Name: Getter
+		Method Name: run
+		Parameters: none
+
+		Pseoudocode	
+
+			getData()
+			SimpsonRule.calculate();
+			SimpsonRule.print();
+
+		-------------------------------------------------------------------------
+
+		Class Name: SimpsonRule
+		Method Name: print
+		Parameters: none
+
+		Pseoudocode	
+			
+			cout << 
+			"
+			x 	= x
+			dof = dof
+			p 	= p
+			"
+
+		-------------------------------------------------------------------------
