@@ -1,15 +1,3 @@
-// Autor: Adrián García
-// A01351166
-// 15 Abril 2020
-//
-#include <iostream>
-#include <math.h>
-#include <iomanip>
-
-using namespace std;
-
-# define PI 3.14159265358979323846
-
 //.b=20
 class SimpsonRule {
 
@@ -48,14 +36,17 @@ public:
 		return x; //.m
 	}
 
+	//.i
 	int getDof() { //.m
 		return dof; //.m
 	}
 
+	//.i
 	double getP() { //.m
 		return p; //.m
 	}
 
+	//.i
 	void print() {
 
 		cout << fixed << setprecision(5);
@@ -64,10 +55,12 @@ public:
 		cout << "p   = " << p << endl;
 	}
 
+	//.i
 	void setX(double x) { //.m
 		this->x = x; //.m
 	}
 
+	//.i
 	void setDof(int dof) { //.m
 		this->dof = dof; //.m
 	}
@@ -77,6 +70,7 @@ public:
 			first = pow(1+((pow (W*2, 2)/dof)), -1* ((dof+1)/2))
 			distributionT(((double)(dof+1)/2)-1)
 	*/
+	//.i
 	void calculate() {
 	
 		int num_seg = 10;
@@ -104,44 +98,3 @@ public:
 		p = total;
 	}
 };
-
-//.b=3
-class Getter {
-
-private:
-	SimpsonRule simpsonRule;
-
-public:
-
-	//.i
-	Getter(){}
-	
-	//.i
-	void getData() {
-
-		double x;
-		double dof;
-
-		cin >> x;
-		cin >> dof;
-
-		simpsonRule.setX(x);
-		simpsonRule.setDof(dof);
-	}
-
-	//.i
-	void run() {
-		getData();
-		simpsonRule.calculate();
-		simpsonRule.print();
-	}
-};
-
-//.b=4
-int main() {
-
-	Getter program; //.m
-	program.run();
-
-	return 0;
-}
