@@ -1,3 +1,7 @@
+// Adrian Garcia Lopez
+// A01351166
+//
+// main.cpp 
 #include <iostream>
 #include <iomanip>
 #include "data.h"
@@ -10,50 +14,64 @@
 
 using namespace std;
 
-void output(int n, double xk, double r, double r2, double b0, double b1, double yk, double sig, double ran, double ls, double li){
+void printResult(int n, double xk, double r, double r2, double b0, double b1, double yk, double sig, double ran, double ls, double li){
 
-    cout << fixed << setprecision(5);
-    cout << "  n = " << n << "\n";
-    cout << " xk = " << xk << "\n";
-    cout << "  r = " << r << "\n";
-    cout << " r2 = " << r2 << "\n";
-    cout << " b0 = " << b0 << "\n";
-    cout << " b1 = " << b1 << "\n";
-    cout << " yk = " << yk << "\n";
-    cout << fixed << setprecision(10);
-    cout << "sig = " << sig << "\n";
-    cout << fixed << setprecision(5);
-    cout << "ran = " << ran << "\n";
-    cout << " ls = " << ls << "\n";
-    cout << " li = " << li << "\n";
+	cout << fixed << setprecision(5);
+	cout << "  n = " << n << "\n";
+	cout << " xk = " << xk << "\n";
+	cout << "  r = " << r << "\n";
+	cout << " r2 = " << r2 << "\n";
+	cout << " b0 = " << b0 << "\n";
+	cout << " b1 = " << b1 << "\n";
+	cout << " yk = " << yk << "\n";
+	cout << fixed << setprecision(10);
+	cout << "sig = " << sig << "\n";
+	cout << fixed << setprecision(5);
+	cout << "ran = " << ran << "\n";
+	cout << " ls = " << ls << "\n";
+	cout << " li = " << li << "\n";
 }
 
 //.i
 int main() {
-    
-    string file;
-    cout << "Nombre del archivo: ";
-    cin >> file;
-    Data data;
-    data.start(file);
-    Regression regression(data);
-    Correlation correlation(data);
-    Simpson s;
-    T t;
-    Interval interval;
-    Significance significance;
+	
+	string file;
+	cout << "Nombre del archivo: ";
+	cin >> file;
+	Data data;
+	data.start(file);
+	Regression regression(data);
+	Correlation correlation(data);
+	Simpson s;
+	T t;
+	Interval interval;
+	Significance significance;
 
-    int n = data.getN();
-    double xk = data.getXk();
-    double r = correlation.getr();
-    double r2 = correlation.getr2();
-    double b0 = regression.getb0();
-    double b1 = regression.getb1();
-    double yk = regression.predict(xk);
-    double sig = significance.significance(r, n, r2, s, t);
-    double ran = interval.calculate_range(data.getX(), data.getY(), data.getAvgX(), n, regression, t, s, xk);
-    double ls = interval.upi(yk);
-    double li = interval.lpi(yk);
-    output(n, xk, r, r2, b0, b1, yk, sig, ran, ls, li);
-    return 0;
+	int n;
+	double xk;
+	double r;
+	double r2;
+	double b0;
+	double b1;
+	double yk;
+	double sig;
+	double ran;
+	double ls;
+	double li;
+
+	n = data.getN();
+	xk = data.getXk();
+	r = correlation.getr();
+	r2 = correlation.getr2();
+	b0 = regression.getb0();
+	b1 = regression.getb1();
+	yk = regression.predict(xk);
+	sig = significance.significance(r, n, r2, s, t);
+	ran = interval.calculate_range(data.getX(), data.getY(), data.getAvgX(), n, regression, t, s, xk);
+	ls = interval.upi(yk);
+	li = interval.lpi(yk);
+	
+	printResult(n, xk, r, r2, b0, b1, yk, sig, ran, ls, li);
+	
+	return 0;
 }
